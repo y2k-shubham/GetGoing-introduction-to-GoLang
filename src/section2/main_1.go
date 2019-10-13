@@ -2,6 +2,12 @@ package main
 
 import "fmt"
 
+func swap(m1 *int, m2 *int) {
+	var tmp int = * m1
+	* m1 = * m2
+	* m2 = tmp
+}
+
 func main() {
 
 	// part1
@@ -12,7 +18,7 @@ func main() {
 	// part2
 	var (
 		m2 int = 1
-		m3 = 2
+		m3     = 2
 	)
 	fmt.Println(m2 + m3)
 
@@ -25,4 +31,11 @@ func main() {
 	m6 := 6
 	var m7 int = 7
 	fmt.Println(m6 + m7)
+
+	// part5
+	var v1 int = 15
+	var v2 int = 16
+	fmt.Printf("v1 = %d, v2 = %d\n", v1, v2)
+	swap(&v1, &v2)
+	fmt.Printf("v1 = %d, v2 = %d\n", v1, v2)
 }
