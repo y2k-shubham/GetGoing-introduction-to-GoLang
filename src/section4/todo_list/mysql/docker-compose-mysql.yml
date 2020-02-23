@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  mysql:
+    container_name: todo_list_mysql
+    image: mysql:latest
+    command: mysqld --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATA=/var/lib/mysql
+    volumes:
+      - ./data:/var/lib/mysql
+    ports:
+      - 3307:3306
