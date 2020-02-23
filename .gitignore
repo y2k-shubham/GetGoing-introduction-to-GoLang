@@ -17,3 +17,6 @@
 
 # MacOS
 .DS_Store
+
+# MySQL-data
+src/section4/todo_list/mysql/data/
