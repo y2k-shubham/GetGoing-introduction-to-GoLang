@@ -25,13 +25,14 @@ func Ping(writer http.ResponseWriter, request *http.Request) {
 func Create(writer http.ResponseWriter, request *http.Request) {
 	if request.Method == http.MethodPost {
 		var todo Todo = Todo{
-			Name: request.FormValue("Name"),
-			Todo: request.FormValue("Todo"),
+			Name: request.FormValue("name"),
+			Todo: request.FormValue("todo"),
 		}
 		if err := CreateTodo(todo); err != nil {
 			writer.Write([]byte("Some error occured: " + err.Error()))
 		} else {
-			writer.Write([]byte("Todo created"))
+			writer.WriteHeader(http.StatusCreated)
+			writer.Write([]byte("Todo created " + todo.ToString()))
 		}
 	}
 }
