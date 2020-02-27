@@ -30,6 +30,8 @@ func Create(writer http.ResponseWriter, request *http.Request) {
 		}
 		if err := CreateTodo(todo); err != nil {
 			writer.Write([]byte("Some error occured: " + err.Error()))
+		} else {
+			writer.Write([]byte("Todo created"))
 		}
 	}
 }
