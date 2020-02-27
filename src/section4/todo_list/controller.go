@@ -8,6 +8,7 @@ import (
 func Register() *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/ping", Ping)
+	mux.HandleFunc("/create", Create)
 	return mux
 }
 
@@ -18,5 +19,17 @@ func Ping(writer http.ResponseWriter, request *http.Request) {
 			Body: "pong",
 		}
 		json.NewEncoder(writer).Encode(data)
+	}
+}
+
+func Create(writer http.ResponseWriter, request *http.Request) {
+	if request.Method == http.MethodPost {
+		var todo Todo = Todo{
+			Name: request.FormValue("Name"),
+			Todo: request.FormValue("Todo"),
+		}
+		if err := CreateTodo(todo); err != nil {
+			writer.Write([]byte("Some error occured: " + err.Error()))
+		}
 	}
 }
