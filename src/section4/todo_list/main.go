@@ -8,7 +8,7 @@ import (
 
 func main() {
 	// database connection
-	db := Connect()
+	db := GetConnection()
 	defer db.Close()
 
 	// request multiplexer
