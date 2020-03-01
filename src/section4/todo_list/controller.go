@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 )
 
 func Register() *http.ServeMux {
@@ -70,7 +71,7 @@ func ReadHelper(writer http.ResponseWriter, todos []Todo, err error) {
 
 func Delete(writer http.ResponseWriter, request *http.Request) {
 	if request.Method == http.MethodDelete {
-		nameFilter := request.URL.Query().Get("name")
+		nameFilter := strings.Replace(request.URL.Path, "/delete/", "", -1)
 		if err := DeleteTodo(nameFilter); err != nil {
 			writer.Write([]byte("Some error occured: " + err.Error()))
 		} else {
