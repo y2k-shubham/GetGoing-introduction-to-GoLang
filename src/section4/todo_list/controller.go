@@ -11,6 +11,7 @@ func Register() *http.ServeMux {
 	mux.HandleFunc("/create", Create)
 	mux.HandleFunc("/read", Read)
 	mux.HandleFunc("/read/", ReadByName)
+	mux.HandleFunc("/delete/", Delete)
 	return mux
 }
 
@@ -63,6 +64,17 @@ func ReadHelper(writer http.ResponseWriter, todos []Todo, err error) {
 			writer.Write([]byte("Result set empty!"))
 		} else {
 			json.NewEncoder(writer).Encode(todos)
+		}
+	}
+}
+
+func Delete(writer http.ResponseWriter, request *http.Request) {
+	if request.Method == http.MethodDelete {
+		nameFilter := request.URL.Query().Get("name")
+		if err := DeleteTodo(nameFilter); err != nil {
+			writer.Write([]byte("Some error occured: " + err.Error()))
+		} else {
+			writer.Write([]byte("Deleted records for name = " + nameFilter))
 		}
 	}
 }
