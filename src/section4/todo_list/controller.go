@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"net/http"
-	"strings"
 )
 
 func Register() *http.ServeMux {
@@ -12,6 +11,7 @@ func Register() *http.ServeMux {
 	mux.HandleFunc("/create", Create)
 	mux.HandleFunc("/read", Read)
 	mux.HandleFunc("/read/", ReadByName)
+	mux.HandleFunc("/delete/", Delete)
 	return mux
 }
 
@@ -63,12 +63,19 @@ func ReadHelper(writer http.ResponseWriter, todos []Todo, err error) {
 		if todos == nil {
 			writer.Write([]byte("Result set empty!"))
 		} else {
-			var stringifiedTodos = []string{}
-			for _, todo := range todos {
-				stringifiedTodos = append(stringifiedTodos, todo.ToString())
-			}
-			stringifiedDump := "[\n  " + strings.Join(stringifiedTodos, ",\n  ") + "\n]"
-			writer.Write([]byte(stringifiedDump))
+			json.NewEncoder(writer).Encode(todos)
+		}
+	}
+}
+
+func Delete(writer http.ResponseWriter, request *http.Request) {
+	if request.Method == http.MethodDelete {
+		nameFilter := request.URL.Query().Get("name")
+		if err := DeleteTodo(nameFilter); err != nil {
+			writer.Write([]byte("Some error occured: " + err.Error()))
+		} else {
+			writer.WriteHeader(http.StatusOK)
+			json.NewEncoder(writer).Encode("Deleted records for name = " + nameFilter)
 		}
 	}
 }

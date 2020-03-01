@@ -31,6 +31,17 @@ func CreateTodo(todo Todo) error {
 	queryTmplt := "INSERT INTO %s.%s VALUES ('%s', '%s')"
 	query := fmt.Sprintf(queryTmplt, db, table, todo.Name, todo.Todo)
 
+	return RunDMLQuery(query)
+}
+
+func DeleteTodo(nameFilter string) error {
+	queryTmplt := "DELETE FROM %s.%s WHERE %s = '%s'"
+	query := fmt.Sprintf(queryTmplt, db, table, name, nameFilter)
+
+	return RunDMLQuery(query)
+}
+
+func RunDMLQuery(query string) error {
 	rows, err := GetConnection().Query(query)
 	if rows != nil {
 		defer rows.Close()
