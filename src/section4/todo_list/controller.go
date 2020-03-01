@@ -74,7 +74,8 @@ func Delete(writer http.ResponseWriter, request *http.Request) {
 		if err := DeleteTodo(nameFilter); err != nil {
 			writer.Write([]byte("Some error occured: " + err.Error()))
 		} else {
-			writer.Write([]byte("Deleted records for name = " + nameFilter))
+			writer.WriteHeader(http.StatusOK)
+			json.NewEncoder(writer).Encode("Deleted records for name = " + nameFilter)
 		}
 	}
 }
