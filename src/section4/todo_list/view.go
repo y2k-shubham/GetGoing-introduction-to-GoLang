@@ -13,5 +13,5 @@ type Todo struct {
 }
 
 func (todo Todo) ToString() string {
-	return fmt.Sprintf("{\"Name\": \"%s\", \"Todo\": \"%s\"}\n", todo.Name, todo.Todo)
+	return fmt.Sprintf("{\"Name\": \"%s\", \"Todo\": \"%s\"}", todo.Name, todo.Todo)
 }

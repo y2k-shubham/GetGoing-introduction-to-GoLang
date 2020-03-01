@@ -41,3 +41,32 @@ func CreateTodo(todo Todo) error {
 		return nil
 	}
 }
+
+func ReadTodos() ([]Todo, error) {
+	queryTmplt := "SELECT * FROM %s.%s"
+	query := fmt.Sprintf(queryTmplt, db, table)
+
+	rows, err := Connect().Query(query)
+	var todos []Todo
+
+	if rows != nil {
+		defer rows.Close()
+		if err == nil {
+			for rows.Next() {
+				var todo Todo = Todo{}
+				err := rows.Scan(&todo.Name, &todo.Todo)
+				if err != nil {
+					log.Fatal(err)
+				} else {
+					todos = append(todos, todo)
+				}
+			}
+		} else {
+			log.Fatal(err)
+		}
+	} else {
+		fmt.Println("Got no rows")
+	}
+
+	return todos, nil
+}
