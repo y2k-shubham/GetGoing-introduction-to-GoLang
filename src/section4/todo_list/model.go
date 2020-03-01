@@ -9,6 +9,7 @@ import (
 var con *sql.DB
 var db string = "todo_list"
 var table string = "todo"
+var name string = "name"
 
 func GetConnection() *sql.DB {
 	if con == nil {
@@ -46,6 +47,17 @@ func ReadTodos() ([]Todo, error) {
 	queryTmplt := "SELECT * FROM %s.%s"
 	query := fmt.Sprintf(queryTmplt, db, table)
 
+	return GetSelectQueryResults(query)
+}
+
+func ReadTodosByName(nameFilter string) ([]Todo, error) {
+	queryTmplt := "SELECT * FROM %s.%s WHERE %s = '%s'"
+	query := fmt.Sprintf(queryTmplt, db, table, name, nameFilter)
+
+	return GetSelectQueryResults(query)
+}
+
+func GetSelectQueryResults(query string) ([]Todo, error) {
 	rows, err := GetConnection().Query(query)
 	var todos []Todo
 

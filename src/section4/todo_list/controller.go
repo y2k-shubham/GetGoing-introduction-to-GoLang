@@ -11,6 +11,7 @@ func Register() *http.ServeMux {
 	mux.HandleFunc("/ping", Ping)
 	mux.HandleFunc("/create", Create)
 	mux.HandleFunc("/read", Read)
+	mux.HandleFunc("/read/", ReadByName)
 	return mux
 }
 
@@ -41,20 +42,33 @@ func Create(writer http.ResponseWriter, request *http.Request) {
 
 func Read(writer http.ResponseWriter, request *http.Request) {
 	if request.Method == http.MethodGet {
-		if todos, err := ReadTodos(); err != nil {
-			writer.Write([]byte("Some error occured: " + err.Error()))
+		todos, err := ReadTodos()
+		ReadHelper(writer, todos, err)
+	}
+}
+
+func ReadByName(writer http.ResponseWriter, request *http.Request) {
+	if request.Method == http.MethodGet {
+		nameFilter := request.URL.Query().Get("name")
+		todos, err := ReadTodosByName(nameFilter)
+		ReadHelper(writer, todos, err)
+	}
+}
+
+func ReadHelper(writer http.ResponseWriter, todos []Todo, err error) {
+	if err != nil {
+		writer.Write([]byte("Some error occured: " + err.Error()))
+	} else {
+		writer.WriteHeader(http.StatusOK)
+		if todos == nil {
+			writer.Write([]byte("Result set empty!"))
 		} else {
-			writer.WriteHeader(http.StatusOK)
-			if todos == nil {
-				writer.Write([]byte("Result set empty!"))
-			} else {
-				var stringifiedTodos = []string{}
-				for _, todo := range todos {
-					stringifiedTodos = append(stringifiedTodos, todo.ToString())
-				}
-				stringifiedDump := "[\n  " + strings.Join(stringifiedTodos, ",\n  ") + "\n]"
-				writer.Write([]byte(stringifiedDump))
+			var stringifiedTodos = []string{}
+			for _, todo := range todos {
+				stringifiedTodos = append(stringifiedTodos, todo.ToString())
 			}
+			stringifiedDump := "[\n  " + strings.Join(stringifiedTodos, ",\n  ") + "\n]"
+			writer.Write([]byte(stringifiedDump))
 		}
 	}
 }
