@@ -36,7 +36,7 @@ func Create(writer http.ResponseWriter, request *http.Request) {
 			writer.Write([]byte("Some error occured: " + err.Error()))
 		} else {
 			writer.WriteHeader(http.StatusCreated)
-			writer.Write([]byte("Todo created " + todo.ToString()))
+			json.NewEncoder(writer).Encode("Todo created " + todo.ToString())
 		}
 	}
 }
