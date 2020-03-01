@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"net/http"
-	"strings"
 )
 
 func Register() *http.ServeMux {
@@ -63,12 +62,7 @@ func ReadHelper(writer http.ResponseWriter, todos []Todo, err error) {
 		if todos == nil {
 			writer.Write([]byte("Result set empty!"))
 		} else {
-			var stringifiedTodos = []string{}
-			for _, todo := range todos {
-				stringifiedTodos = append(stringifiedTodos, todo.ToString())
-			}
-			stringifiedDump := "[\n  " + strings.Join(stringifiedTodos, ",\n  ") + "\n]"
-			writer.Write([]byte(stringifiedDump))
+			json.NewEncoder(writer).Encode(todos)
 		}
 	}
 }
