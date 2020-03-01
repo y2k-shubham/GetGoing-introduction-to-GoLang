@@ -11,6 +11,8 @@ var db string = "todo_list"
 var table string = "todo"
 var name string = "name"
 
+// WARNING: string formatting allows SQL-injection
+
 func GetConnection() *sql.DB {
 	if con == nil {
 		db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:3307)/todo_list")
